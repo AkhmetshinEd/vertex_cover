@@ -1,14 +1,13 @@
 package ru.kpfu.itis.group11401.computational_complexity_theory.vertex_cover;
 
-import java.util.ArrayList;
 import java.util.BitSet;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class ExhaustiveSearch {
-    public static List<Set<Integer>> getCovers(int[][] adjacencyMatrix) {
-        List<Set<Integer>> res = new ArrayList<>();
+    public static Set<Set<Integer>> getCovers(int[][] adjacencyMatrix) {
+        Set<Set<Integer>> res = new HashSet<>();
         int lastSetCode = (int) Math.pow(2, adjacencyMatrix.length);
         for (int setCode = 1; setCode < lastSetCode; setCode++) {
             BitSet set = convert(setCode);
@@ -38,7 +37,7 @@ public class ExhaustiveSearch {
         BitSet res = new BitSet();
         int ind = 0;
         while (value > 0) {
-            if (value % 2 != 0) {
+            if ((value & 1) != 0) {
                 res.set(ind);
             }
             ind++;
