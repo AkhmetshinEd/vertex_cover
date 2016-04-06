@@ -1,13 +1,10 @@
 package ru.kpfu.itis.group11401.computational_complexity_theory.vertex_cover;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ApproxVertexCover {
-    public static List<Integer> search(List<Edge> edges) {
-        List<Integer> res = new LinkedList<>();
+    public static Set<Integer> getCover(List<Edge> edges) {
+        Set<Integer> res = new HashSet<>();
 
         // Перемешиваем список ребер
         Collections.shuffle(edges);

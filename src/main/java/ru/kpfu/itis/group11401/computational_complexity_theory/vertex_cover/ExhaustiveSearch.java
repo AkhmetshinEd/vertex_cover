@@ -1,44 +1,49 @@
 package ru.kpfu.itis.group11401.computational_complexity_theory.vertex_cover;
 
-import java.util.BitSet;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class ExhaustiveSearch {
     public static Set<Set<Integer>> getCovers(int[][] adjacencyMatrix) {
-        Set<Set<Integer>> res = new HashSet<>();
-        int lastSetCode = (int) Math.pow(2, adjacencyMatrix.length);
-        for (int setCode = 1; setCode < lastSetCode; setCode++) {
-            BitSet set = convert(setCode);
-            if (covers(set, adjacencyMatrix)) {
-                res.add(set.stream().boxed().collect(Collectors.toSet()));
-            }
-        }
-        return res;
+        return IntStream.range(1, (int) Math.pow(2, adjacencyMatrix.length))
+                .mapToObj(ExhaustiveSearch::convert)
+                .filter(set -> covers(set, adjacencyMatrix))
+                .collect(Collectors.toSet());
     }
 
-    private static boolean covers(BitSet set, int[][] adjacencyMatrix) {
-        boolean res = true;
-        for (int i = 0; res && i < adjacencyMatrix.length; i++) {
-            if (!set.get(i)) {
+    public static void main(String[] args) {
+        int[][] adjacencyMatrix = {
+                {2, 1, 0, 0, 1, 0},
+                {1, 0, 1, 0, 1, 0},
+                {0, 1, 0, 1, 0, 0},
+                {0, 0, 1, 0, 1, 1},
+                {1, 1, 0, 1, 0, 0},
+                {0, 0, 0, 1, 0, 0}
+        };
+        System.out.println(getCovers(adjacencyMatrix));
+    }
+
+    private static boolean covers(Set<Integer> set, int[][] adjacencyMatrix) {
+        for (int i = 0; i < adjacencyMatrix.length; i++) {
+            if (!set.contains(i)) {
                 for (int j = 0; j <= i; j++) {
-                    if (!set.get(j) && adjacencyMatrix[i][j] > 0) {
-                        res = false;
-                        break;
+                    if (!set.contains(j) && adjacencyMatrix[i][j] > 0) {
+                        return false;
                     }
                 }
             }
         }
-        return res;
+        return true;
     }
 
-    private static BitSet convert(int value) {
-        BitSet res = new BitSet();
+    private static Set<Integer> convert(int value) {
+        Set<Integer> res = new HashSet<>();
         int ind = 0;
         while (value > 0) {
             if ((value & 1) != 0) {
-                res.set(ind);
+                res.add(ind);
             }
             ind++;
             value >>>= 1;
